@@ -1,7 +1,5 @@
 #pragma once
 
-#include <boost/variant/static_visitor.hpp>
-
 #include "render_context.hpp"
 #include "mstch/mstch.hpp"
 #include "utils.hpp"
@@ -9,8 +7,10 @@
 
 namespace mstch {
 
-class render_section: public boost::static_visitor<std::string> {
+class render_section {
  public:
+  typedef std::string result_type;
+     
   enum class flag { none, keep_array };
   render_section(
       render_context& ctx,

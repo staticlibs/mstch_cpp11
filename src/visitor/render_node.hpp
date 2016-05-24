@@ -1,7 +1,6 @@
 #pragma once
 
 #include <sstream>
-#include <boost/variant/static_visitor.hpp>
 
 #include "render_context.hpp"
 #include "mstch/mstch.hpp"
@@ -9,8 +8,10 @@
 
 namespace mstch {
 
-class render_node: public boost::static_visitor<std::string> {
+class render_node {
  public:
+  typedef std::string result_type;
+     
   enum class flag { none, escape_html };
   render_node(render_context& ctx, flag p_flag = flag::none):
       m_ctx(ctx), m_flag(p_flag)

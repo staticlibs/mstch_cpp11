@@ -65,25 +65,24 @@ mstch::node parse_with_rapidjson(const std::string& str) {
 }
 
 #define SPECS_TEST(x) TEST_CASE("specs_" #x) { \
-  using boost::get; \
   auto data = parse_with_rapidjson(x ## _json); \
-  for (auto& test_item: get<mstch::array>(get<mstch::map>(data)["tests"])) {\
-    auto test = get<mstch::map>(test_item); \
+  for (auto& test_item: data.get_map()["tests"].get_array()) {\
+    auto test = test_item.get_map(); \
     std::map<std::string,std::string> partials; \
     if (test.count("partials")) \
-      for (auto& partial_item: get<mstch::map>(test["partials"])) \
-        partials.insert(std::make_pair(partial_item.first, get<std::string>(partial_item.second))); \
+      for (auto& partial_item: test["partials"].get_map()) \
+        partials.insert(std::make_pair(partial_item.first, partial_item.second.get_string())); \
     mstch::map context; \
-    for (auto& data_item: get<mstch::map>(test["data"])) \
+    for (auto& data_item: test["data"].get_map()) \
       if (data_item.first == "lambda") \
-        context.insert(std::make_pair(data_item.first, specs_lambdas[get<std::string>(test["name"])])); \
+        context.insert(std::make_pair(data_item.first, specs_lambdas[test["name"].get_string()])); \
       else \
         context.insert(data_item); \
-    SECTION(get<std::string>(test["name"])) \
+    SECTION(test["name"].get_string()) \
       REQUIRE(mstch::render( \
-          get<std::string>(test["template"]), \
+          test["template"].get_string(), \
           context, partials) == \
-          get<std::string>(test["expected"])); \
+          test["expected"].get_string()); \
   } \
 }
 
