@@ -50,7 +50,12 @@ class render_context {
   std::map<std::string, template_type> m_partials;
   std::deque<mstch::node> m_nodes;
   std::list<const mstch::node*> m_node_ptrs;
+// see http://stackoverflow.com/q/22751203/314015
+#ifndef _WIN32
   std::stack<std::unique_ptr<render_state>> m_state;
+#else
+  std::stack<std::shared_ptr<render_state>> m_state;
+#endif // _WIN32
 };
 
 }
