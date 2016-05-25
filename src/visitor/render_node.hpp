@@ -24,7 +24,9 @@ class render_node {
   }
 
   std::string operator()(const int& value) const {
-    return std::to_string(value);
+    std::stringstream ss{};
+    ss << value;
+    return ss.str();
   }
 
   std::string operator()(const double& value) const {
