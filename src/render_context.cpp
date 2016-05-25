@@ -56,12 +56,21 @@ std::string render_context::render(
   std::string output;
   bool prev_eol = true;
   for (auto& token: templt) {
-    if (prev_eol && prefix.length() != 0)
-      output += m_state.top()->render(*this, {prefix});
-    output += m_state.top()->render(*this, token);
+    output += this->render_token(token, prev_eol, prefix);
     prev_eol = token.eol();
   }
   return output;
+}
+
+std::string render_context::render_token(
+    const token& token, bool prev_eol, const std::string& prefix) {
+  if (!prev_eol || 0 == prefix.length()) {
+      return m_state.top()->render(*this, token);
+  } else {
+      std::string res = m_state.top()->render(*this,{prefix});
+      res += m_state.top()->render(*this, token);
+      return res;
+  }
 }
 
 std::string render_context::render_partial(

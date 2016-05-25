@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <functional>
+#include <ios>
 
 #include "mstch/mstch_node.hpp"
 
@@ -24,5 +25,25 @@ std::string render(
     const node& root,
     const std::map<std::string,std::string>& partials =
         std::map<std::string,std::string>());
+
+class renderer {
+    class impl;
+    std::unique_ptr<renderer::impl> pimpl;
+    
+public:    
+    ~renderer();
+    renderer(const renderer&) = delete;
+    renderer(renderer&& other);
+    renderer& operator=(const renderer&) = delete;
+    renderer& operator=(renderer&& other);
+
+    renderer(
+        std::string tmplt,
+        const node& root,
+        const std::map<std::string, std::string>& partials =
+            std::map<std::string, std::string>());
+    
+    std::streamsize read(char* buffer, std::streamsize length);
+};
 
 }

@@ -9,6 +9,7 @@
 #include "mstch/mstch.hpp"
 #include "state/render_state.hpp"
 #include "template_type.hpp"
+#include "token.hpp"
 
 namespace mstch {
 
@@ -23,12 +24,16 @@ class render_context {
     render_context& m_context;
   };
 
+  render_context() { }
+          
   render_context(
       const mstch::node& node,
       const std::map<std::string, template_type>& partials);
   const mstch::node& get_node(const std::string& token);
   std::string render(
       const template_type& templt, const std::string& prefix = "");
+  std::string render_token(
+      const token& token, bool prev_eol, const std::string& prefix = "");  
   std::string render_partial(
       const std::string& partial_name, const std::string& prefix);
   template<class T, class... Args>
