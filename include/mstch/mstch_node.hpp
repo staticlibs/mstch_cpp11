@@ -170,11 +170,21 @@ public:
     node(const std::map<const std::string, node>& map_value) :
     type(node_type::MAP), map_or_array_value(std::make_shared<map_or_array_type>()) { 
         this->map_or_array_value->first = map_value;
+    }
+
+    node(std::map<const std::string, node>&& map_value) :
+    type(node_type::MAP), map_or_array_value(std::make_shared<map_or_array_type>()) {
+        this->map_or_array_value->first = std::move(map_value);
     }    
 
     node(const std::vector<node>& array) :
     type(node_type::ARRAY), map_or_array_value(std::make_shared<map_or_array_type>()) {
         this->map_or_array_value->second = array;
+    }
+
+    node(std::vector<node>&& array) :
+    type(node_type::ARRAY), map_or_array_value(std::make_shared<map_or_array_type>()) {
+        this->map_or_array_value->second = std::move(array);
     }
     
     template<typename Visitor>
