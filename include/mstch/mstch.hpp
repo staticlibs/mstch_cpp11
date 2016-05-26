@@ -39,7 +39,7 @@ public:
 
     renderer(
         std::string tmplt,
-        const node& root,
+        node root,
         const std::map<std::string, std::string>& partials =
             std::map<std::string, std::string>());
     

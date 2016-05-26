@@ -38,6 +38,7 @@ namespace mstch {
     
 class renderer::impl {
   template_type tmplt;
+  node root;
   std::vector<token>::const_iterator it;
   render_context ctx;
   std::string cur;
@@ -50,14 +51,14 @@ public:
     
   impl(
       const std::string& tmplt,
-      const node& root,
+      node&& root,
       const std::map<std::string, std::string>& partials) :
-    tmplt(tmplt), it(this->tmplt.begin()) {
+    tmplt(tmplt), root(std::move(root)), it(this->tmplt.begin()) {
     std::map<std::string, template_type> partial_templates;
     for (auto& partial : partials) {
       partial_templates.insert({partial.first, {partial.second}});
     }
-    this->ctx = render_context(root, partial_templates);
+    this->ctx = render_context(this->root, partial_templates);
   }
   
   std::streamsize read(char* buffer, std::streamsize length) {
@@ -100,9 +101,9 @@ renderer& renderer::operator=(renderer&& other) {
 
 renderer::renderer(
     std::string tmplt,
-    const node& root,
+    node root,
     const std::map<std::string, std::string>& partials) : 
-  pimpl(new renderer::impl{tmplt, root, partials}){ }
+  pimpl(new renderer::impl{tmplt, std::move(root), partials}){ }
 
 std::streamsize renderer::read(char* buffer, std::streamsize length) {
   return pimpl->read(buffer, length);
