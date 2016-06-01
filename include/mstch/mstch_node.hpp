@@ -168,8 +168,9 @@ public:
     type(node_type::OBJECT), object_value(std::move(object_value)) { }
 
     node(const std::map<const std::string, node>& map_value) :
-    type(node_type::MAP), map_or_array_value(std::make_shared<map_or_array_type>()) { 
-        this->map_or_array_value->first = map_value;
+    type(node_type::MAP), map_or_array_value(std::make_shared<map_or_array_type>()) {
+        std::map<const std::string, node> tmp = map_value;
+        this->map_or_array_value->first = std::move(tmp);
     }
 
     node(std::map<const std::string, node>&& map_value) :
@@ -179,7 +180,8 @@ public:
 
     node(const std::vector<node>& array) :
     type(node_type::ARRAY), map_or_array_value(std::make_shared<map_or_array_type>()) {
-        this->map_or_array_value->second = array;
+        std::vector<node> tmp = array;
+        this->map_or_array_value->second = std::move(tmp);
     }
 
     node(std::vector<node>&& array) :
